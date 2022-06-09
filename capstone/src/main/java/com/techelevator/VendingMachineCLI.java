@@ -6,7 +6,8 @@ public class VendingMachineCLI {
 
 	private static final String MAIN_MENU_OPTION_DISPLAY_ITEMS = "Display Vending Machine Items";
 	private static final String MAIN_MENU_OPTION_PURCHASE = "Purchase";
-	private static final String[] MAIN_MENU_OPTIONS = { MAIN_MENU_OPTION_DISPLAY_ITEMS, MAIN_MENU_OPTION_PURCHASE };
+	private static final String MAIN_MENU_EXIT = "Exit and return change";
+	private static final String[] MAIN_MENU_OPTIONS = { MAIN_MENU_OPTION_DISPLAY_ITEMS, MAIN_MENU_OPTION_PURCHASE, MAIN_MENU_EXIT};
 
 	private Menu menu;
 
@@ -14,15 +15,26 @@ public class VendingMachineCLI {
 		this.menu = menu;
 	}
 
+
 	public void run() {
-		while (true) {
+
+		boolean vending = true;
+		String [] activeMenu = MAIN_MENU_OPTIONS;
+
+		while (vending) {
 			String choice = (String) menu.getChoiceFromOptions(MAIN_MENU_OPTIONS);
 
 			if (choice.equals(MAIN_MENU_OPTION_DISPLAY_ITEMS)) {
 				// display vending machine items
+				System.out.println("Current stock");
 			} else if (choice.equals(MAIN_MENU_OPTION_PURCHASE)) {
 				// do purchase
+				System.out.println("Purchase menu");
+			} else if (choice.equals(MAIN_MENU_EXIT)) {
+				System.out.println("Thank you for shopping with us");
+				vending = false;
 			}
+
 		}
 	}
 
