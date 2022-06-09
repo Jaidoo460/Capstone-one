@@ -7,19 +7,24 @@ public class Change {
     private int dimes;
 
     public int getQuarters() {
+
         return this.quarters;
     }
 
     public int getNickels() {
+
         return this.nickels;
     }
 
     public int getDimes() {
+
         return this.dimes;
     }
 
     public String getChange() {
 
+
+        return "Your change is " + quarters + " quarters, " + dimes + " dimes and " + nickels + " nickels.";
     }
 
 }
