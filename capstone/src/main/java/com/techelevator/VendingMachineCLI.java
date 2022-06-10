@@ -151,8 +151,35 @@ public class VendingMachineCLI {
 
 
                     } else if (purchaseChoice.equals(COMPLETE_TRANSACTION)) {
-                        //!!!Empty money and give back change
+                        int quartersCounter = 0;
+                        int dimesCounter = 0;
+                        int nickelsCounter = 0;
 
+                        BigDecimal quarter = new BigDecimal(0.25);
+                        BigDecimal dime = new BigDecimal(0.10);
+                        BigDecimal nickel = new BigDecimal(0.05);
+
+                        while(money.compareTo(BigDecimal.ZERO) > 0){
+
+                            if(money.compareTo(BigDecimal.ZERO) > 0.25){
+                                money = money - quarter;
+                                quartersCounter++;
+                            }
+
+
+                        }
+
+
+
+
+
+
+
+
+
+
+                        
+                        // money returns to $0
 
                         System.out.println("Back to the main menu");
                         purchasing = false;
