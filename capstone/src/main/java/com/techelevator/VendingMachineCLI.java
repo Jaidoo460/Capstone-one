@@ -69,7 +69,16 @@ public class VendingMachineCLI {
                         System.out.println("How much money do you want to add? (Please enter in format x.xx): ");
                         String addedMoney = userInput.nextLine();
 
-                        money = money.add(new BigDecimal(addedMoney));
+//                        BigDecimal moneyByFive = new BigDecimal(addedMoney);
+
+//                        if (moneyByFive.remainder(new BigDecimal(0.05), BigDecimal.ZERO) {
+//                                //equals(new BigDecimal(0))) {
+
+                            money = money.add(new BigDecimal(addedMoney));
+
+//                        } else {
+//                            System.out.println("Please enter a value divisible by $0.05");
+//                        }
 
 
                     } else if (purchaseChoice.equals(SELECT_PRODUCT)) {
