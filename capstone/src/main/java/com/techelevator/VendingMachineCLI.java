@@ -5,7 +5,9 @@ import com.techelevator.view.Menu;
 import java.io.File;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Scanner;
+import java.util.Date;
 
 public class VendingMachineCLI {
 
@@ -31,6 +33,7 @@ public class VendingMachineCLI {
         String[] activeMenu = MAIN_MENU_OPTIONS;
         BigDecimal money = new BigDecimal(0.00);
         String vendingFile = "vendingmachine.csv";
+        Date currentDate = new Date();
 
         while (vending) {
             String choice = (String) menu.getChoiceFromOptions(MAIN_MENU_OPTIONS);
@@ -56,7 +59,7 @@ public class VendingMachineCLI {
                 boolean purchasing = true;
 
                 while (purchasing) {
-                    System.out.println("Current Money Provided: " + money); // placeholder for money variable);
+                    System.out.println("Current Money Provided: $" + money); // placeholder for money variable);
                     String purchaseChoice = (String) menu.getChoiceFromOptions(PURCHASE_SCREEN_OPTIONS);
 
                     if (purchaseChoice.equals(MONEY_FEED_REQUEST)) {
@@ -65,16 +68,8 @@ public class VendingMachineCLI {
                         System.out.println("How much money do you want to add? (Please enter in format x.xx): ");
                         String addedMoney = userInput.nextLine();
 
+                        money = money.add(new BigDecimal(addedMoney));
 
-
-
-						/*
-						Saving BigDecimal conversion for now
-
-						double doubleMoney = Double.parseDouble(addedMoney);
-						BigDecimal moneyAdded = BigDecimal.valueOf(addedMoney);
-						money.add(moneyAdded);
-						*/
 
                     } else if (purchaseChoice.equals(SELECT_PRODUCT)) {
                         boolean currentlyChoosing = true;
@@ -109,33 +104,54 @@ public class VendingMachineCLI {
                                         String itemLine = readFile.nextLine();
 
                                         if (itemLine.contains(selection)) {
-                                            System.out.println(itemLine);
-                                            // split the line with "|"
-                                            // convert index 2 (price) into a double / BIgdecimal
-                                            // minus the price from money
-                                            // log transaction
-                                            // return to purchase selection
+                                            //System.out.println(itemLine);
+
+                                            String[] lineSplitter = itemLine.split("[|]");
+                                            Arrays.toString(lineSplitter);
+
+                                            //Double itemDoublePrice = Double.parseDouble(lineSplitter[2]);
+                                            //BigDecimal itemPrice = BigDecimal.valueOf(itemDoublePrice);
+
+                                            System.out.println();
+
+                                            System.out.println("The price of " + lineSplitter[1] + " is $" + (new BigDecimal(lineSplitter[2])));
+
+                                            if (money.compareTo(new BigDecimal(lineSplitter[2])) >= 0){
+
+                                                System.out.println("Enjoy your " + lineSplitter[1] + "!");
+
+                                                money = money.subtract(new BigDecimal(lineSplitter[2]));
+                                                System.out.println("Your new balance is $" + money);
+
+                                                if (lineSplitter[3].contains("Chip")) {
+                                                    System.out.println("Crunch Crunch, Yum!");
+                                                } else if (lineSplitter[3].contains("Candy")) {
+                                                    System.out.println("Munch Munch, Yum!");
+                                                } else if (lineSplitter[3].contains("Drink")) {
+                                                    System.out.println("Glug Glug, Yum!");
+                                                } else {
+                                                    System.out.println("Chew Chew, Yum!");
+                                                }
+                                            } else {
+                                                System.out.println("Not enough money entered");
+                                            }
+
+                                            System.out.println(currentDate.toString());
+                                            //!!!log transaction
+                                            //!!!update inventory after purchase
+
+                                            currentlyChoosing = false;
+
                                         }
-
-
                                     }
-
-
                                 } catch (Exception e) {
-
                                 }
-
                             }
-
-
-                            // Figure out how to log what is purchased
-
-
                         }
 
 
                     } else if (purchaseChoice.equals(COMPLETE_TRANSACTION)) {
-                        // Empty money and give back change
+                        //!!!Empty money and give back change
 
 
                         System.out.println("Back to the main menu");
