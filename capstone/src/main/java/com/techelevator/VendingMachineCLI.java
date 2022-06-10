@@ -5,6 +5,7 @@ import com.techelevator.view.Menu;
 import java.io.File;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.Scanner;
 import java.util.Date;
@@ -13,7 +14,7 @@ public class VendingMachineCLI {
 
     private static final String MAIN_MENU_OPTION_DISPLAY_ITEMS = "Display Vending Machine Items";
     private static final String MAIN_MENU_OPTION_PURCHASE = "Purchase";
-    private static final String MAIN_MENU_EXIT = "Exit and return change";
+    private static final String MAIN_MENU_EXIT = "Exit machine";
     private static final String[] MAIN_MENU_OPTIONS = {MAIN_MENU_OPTION_DISPLAY_ITEMS, MAIN_MENU_OPTION_PURCHASE, MAIN_MENU_EXIT};
 
     private static final String MONEY_FEED_REQUEST = "Feed Money";
@@ -31,7 +32,7 @@ public class VendingMachineCLI {
 
         boolean vending = true;
         String[] activeMenu = MAIN_MENU_OPTIONS;
-        BigDecimal money = new BigDecimal(0.00);
+        BigDecimal money = new BigDecimal(0.00).setScale(2, RoundingMode.HALF_EVEN);
         String vendingFile = "vendingmachine.csv";
         Date currentDate = new Date();
 
@@ -104,13 +105,9 @@ public class VendingMachineCLI {
                                         String itemLine = readFile.nextLine();
 
                                         if (itemLine.contains(selection)) {
-                                            //System.out.println(itemLine);
 
                                             String[] lineSplitter = itemLine.split("[|]");
                                             Arrays.toString(lineSplitter);
-
-                                            //Double itemDoublePrice = Double.parseDouble(lineSplitter[2]);
-                                            //BigDecimal itemPrice = BigDecimal.valueOf(itemDoublePrice);
 
                                             System.out.println();
 
@@ -138,6 +135,8 @@ public class VendingMachineCLI {
 
                                             System.out.println(currentDate.toString());
                                             //!!!log transaction
+                                            //!!!implement date + time
+
                                             //!!!update inventory after purchase
 
                                             currentlyChoosing = false;
@@ -155,31 +154,29 @@ public class VendingMachineCLI {
                         int dimesCounter = 0;
                         int nickelsCounter = 0;
 
-                        BigDecimal quarter = new BigDecimal(0.25);
-                        BigDecimal dime = new BigDecimal(0.10);
-                        BigDecimal nickel = new BigDecimal(0.05);
+                        BigDecimal quarter = new BigDecimal(0.25).setScale(2, RoundingMode.HALF_EVEN);
+                        BigDecimal dime = new BigDecimal(0.10).setScale(2, RoundingMode.HALF_EVEN);
+                        BigDecimal nickel = new BigDecimal(0.05).setScale(2, RoundingMode.HALF_EVEN);
 
-                        while(money.compareTo(BigDecimal.ZERO) > 0){
 
-                            if(money.compareTo(BigDecimal.ZERO) > 0.25){
-                                money = money - quarter;
+                        while(money.compareTo(BigDecimal.ZERO) == 1) {
+
+                            if (money.compareTo(quarter) == 1) {
+                                money = money.subtract(quarter);
+
                                 quartersCounter++;
+                            } else if (money.compareTo(dime) == 1) {
+                                money = money.subtract(dime);
+
+                                dimesCounter++;
+                            } else {
+                                money = money.subtract(nickel);
+
+                                nickelsCounter++;
                             }
-
-
                         }
+                        System.out.println("Change returned = " + quartersCounter + " quarters, " + dimesCounter + " dimes, and " + nickelsCounter + " nickels");
 
-
-
-
-
-
-
-
-
-
-                        
-                        // money returns to $0
 
                         System.out.println("Back to the main menu");
                         purchasing = false;
