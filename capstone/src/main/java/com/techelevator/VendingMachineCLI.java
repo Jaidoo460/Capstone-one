@@ -73,6 +73,7 @@ public class VendingMachineCLI {
 
 //                        if (moneyByFive.remainder(new BigDecimal(0.05), BigDecimal.ZERO) {
 //                                //equals(new BigDecimal(0))) {
+                        //!!! bug fix
 
                             money = money.add(new BigDecimal(addedMoney));
 
