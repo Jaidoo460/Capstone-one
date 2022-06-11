@@ -61,16 +61,6 @@ public class VendingMachineCLI {
                 System.out.println("Current stock:");
                 System.out.println();
 
-/*
-                try {
-                    Scanner input = new Scanner(new File(vendingFile));
-
-                    while (input.hasNextLine()) {
-                        currentStock.put(input.nextLine(), currentInventory);
-                    }
-                    */
-
-
                 for (Map.Entry<String, Integer> stock : currentStock.entrySet()) {
                     if (stock.getValue() == 0) {
                         System.out.println(stock.getKey() + "SOLD OUT");
@@ -78,12 +68,7 @@ public class VendingMachineCLI {
                         System.out.println(stock.getKey() + " " + stock.getValue());
                     }
                 }
-/*
-                } catch (Exception e) {
-                    System.out.println("Error found");
-                    System.exit(1);
-                }
-*/
+
 
             } else if (choice.equals(MAIN_MENU_OPTION_PURCHASE)) {
                 boolean purchasing = true;
