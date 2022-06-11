@@ -1,7 +1,6 @@
 package com.techelevator;
 
 import com.techelevator.view.Menu;
-import com.techelevator.Inventory;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -98,18 +97,16 @@ public class VendingMachineCLI {
                         Scanner userInput = new Scanner(System.in);
                         System.out.println("How much money do you want to add? (Please enter in format x.xx): ");
                         String addedMoney = userInput.nextLine();
+                        double doubleMoney = Double.parseDouble(addedMoney);
+                        double divider = 0.05;
 
-//                        BigDecimal moneyByFive = new BigDecimal(addedMoney);
+                        if (doubleMoney % divider == 0.00) {
 
-//                        if (moneyByFive.remainder(new BigDecimal(0.05), BigDecimal.ZERO) {
-//                                //equals(new BigDecimal(0))) {
-                        //!!! bug fix
+                            money = money.add(new BigDecimal(addedMoney));
 
-                        money = money.add(new BigDecimal(addedMoney));
-
-//                        } else {
-//                            System.out.println("Please enter a value divisible by $0.05");
-//                        }
+                        } else {
+                            System.out.println("Please enter a value divisible by $0.05");
+                        }
 
                         try (PrintWriter dataOutput = new PrintWriter(new FileOutputStream(logFile, true))) {
 
@@ -203,7 +200,7 @@ public class VendingMachineCLI {
                                         }
                                     }
 
-                              
+
                                 } catch (Exception e) {
                                 }
                             }
