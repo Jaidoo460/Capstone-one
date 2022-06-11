@@ -13,20 +13,20 @@ public class Items {
     public String getItem() {
         return this.item;
     }
+
     public BigDecimal getItemPrice() {
         return this.itemPrice;
     }
+
     public int getAmtItemLeft() {
         return this.amtItemLeft;
     }
+
     public String getLocationInMachine() {
         return this.locationInMachine;
     }
 
     File inventory = new File("vendingmachine.csv");
-
-
-
 
 
 }

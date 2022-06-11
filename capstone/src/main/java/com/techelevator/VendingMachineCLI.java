@@ -1,14 +1,20 @@
 package com.techelevator;
 
 import com.techelevator.view.Menu;
+import com.techelevator.Inventory;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Scanner;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.TreeMap;
+
 
 public class VendingMachineCLI {
 
@@ -34,27 +40,51 @@ public class VendingMachineCLI {
         String[] activeMenu = MAIN_MENU_OPTIONS;
         BigDecimal money = new BigDecimal(0.00).setScale(2, RoundingMode.HALF_EVEN);
         String vendingFile = "vendingmachine.csv";
-        Date currentDate = new Date();
+        LocalDateTime currentDate = LocalDateTime.now();
+        DateTimeFormatter formattedDate = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss a");
+        File logFile = new File("Log.txt");
+        Map<String, Integer> currentStock = new TreeMap<>();
+        int currentInventory = 5;
+
+        try {
+            Scanner input = new Scanner(new File(vendingFile));
+
+            while (input.hasNextLine()) {
+                currentStock.put(input.nextLine(), currentInventory);
+            }
+        } catch (Exception e) {
+        }
 
         while (vending) {
             String choice = (String) menu.getChoiceFromOptions(MAIN_MENU_OPTIONS);
 
             if (choice.equals(MAIN_MENU_OPTION_DISPLAY_ITEMS)) {
                 System.out.println("Current stock:");
+                System.out.println();
 
+/*
                 try {
                     Scanner input = new Scanner(new File(vendingFile));
 
                     while (input.hasNextLine()) {
-                        System.out.println(input.nextLine());
+                        currentStock.put(input.nextLine(), currentInventory);
                     }
+                    */
 
 
+                for (Map.Entry<String, Integer> stock : currentStock.entrySet()) {
+                    if (stock.getValue() == 0) {
+                        System.out.println(stock.getKey() + "SOLD OUT");
+                    } else {
+                        System.out.println(stock.getKey() + " " + stock.getValue());
+                    }
+                }
+/*
                 } catch (Exception e) {
                     System.out.println("Error found");
                     System.exit(1);
                 }
-
+*/
 
             } else if (choice.equals(MAIN_MENU_OPTION_PURCHASE)) {
                 boolean purchasing = true;
@@ -75,11 +105,20 @@ public class VendingMachineCLI {
 //                                //equals(new BigDecimal(0))) {
                         //!!! bug fix
 
-                            money = money.add(new BigDecimal(addedMoney));
+                        money = money.add(new BigDecimal(addedMoney));
 
 //                        } else {
 //                            System.out.println("Please enter a value divisible by $0.05");
 //                        }
+
+                        try (PrintWriter dataOutput = new PrintWriter(new FileOutputStream(logFile, true))) {
+
+                            dataOutput.println(formattedDate.format(currentDate) + " FEED MONEY: $" + addedMoney + " $" + money);
+
+                        } catch (Exception e) {
+
+
+                        }
 
 
                     } else if (purchaseChoice.equals(SELECT_PRODUCT)) {
@@ -110,12 +149,14 @@ public class VendingMachineCLI {
                                 try {
                                     Scanner readFile = new Scanner(vendingMachine.getAbsoluteFile());
 
-
+                                    String itemLine = "";
+                                    String line = "";
                                     while (readFile.hasNextLine()) {
-                                        String itemLine = readFile.nextLine();
+                                        itemLine = readFile.nextLine();
+
 
                                         if (itemLine.contains(selection)) {
-
+                                            line = itemLine;
                                             String[] lineSplitter = itemLine.split("[|]");
                                             Arrays.toString(lineSplitter);
 
@@ -123,7 +164,13 @@ public class VendingMachineCLI {
 
                                             System.out.println("The price of " + lineSplitter[1] + " is $" + (new BigDecimal(lineSplitter[2])));
 
-                                            if (money.compareTo(new BigDecimal(lineSplitter[2])) >= 0){
+                                            if (money.compareTo(new BigDecimal(lineSplitter[2])) >= 0) {
+
+                                                if (currentStock.containsKey(line)) {
+
+                                                    currentStock.put(line, currentStock.get(line) - 1);
+
+                                                }
 
                                                 System.out.println("Enjoy your " + lineSplitter[1] + "!");
 
@@ -143,16 +190,20 @@ public class VendingMachineCLI {
                                                 System.out.println("Not enough money entered");
                                             }
 
-                                            System.out.println(currentDate.toString());
-                                            //!!!log transaction
-                                            //!!!implement date + time
 
-                                            //!!!update inventory after purchase
+                                            try (PrintWriter dataOutput = new PrintWriter(new FileOutputStream(logFile, true))) {
 
+
+                                                dataOutput.println(formattedDate.format(currentDate) + " " + lineSplitter[1] + " " + lineSplitter[0] + " $" + lineSplitter[2] + " $" + money);
+
+
+                                            }
                                             currentlyChoosing = false;
 
                                         }
                                     }
+
+                              
                                 } catch (Exception e) {
                                 }
                             }
@@ -169,7 +220,17 @@ public class VendingMachineCLI {
                         BigDecimal nickel = new BigDecimal(0.05).setScale(2, RoundingMode.HALF_EVEN);
 
 
-                        while(money.compareTo(BigDecimal.ZERO) == 1) {
+                        try (PrintWriter dataOutput = new PrintWriter(new FileOutputStream(logFile, true))) {
+
+                            dataOutput.println(formattedDate.format(currentDate) + " GIVE CHANGE: $" + money + " $0.00");
+
+                        } catch (Exception e) {
+
+
+                        }
+
+
+                        while (money.compareTo(BigDecimal.ZERO) == 1) {
 
                             if (money.compareTo(quarter) == 1) {
                                 money = money.subtract(quarter);
@@ -185,6 +246,8 @@ public class VendingMachineCLI {
                                 nickelsCounter++;
                             }
                         }
+
+
                         System.out.println("Change returned = " + quartersCounter + " quarters, " + dimesCounter + " dimes, and " + nickelsCounter + " nickels");
 
 
