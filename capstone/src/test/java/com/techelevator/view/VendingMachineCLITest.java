@@ -5,9 +5,6 @@ import com.techelevator.VendingMachineCLI;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.awt.*;
-
-import static java.awt.SystemColor.menu;
 
 
 public class VendingMachineCLITest {
